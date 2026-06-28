@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YOLO Detection Dashboard</title>
+  <link rel="stylesheet" href="static/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <div class="dashboard">
+    <header>
+      <h1 class="logo">🧠 YOLO Vision</h1>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Docs</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="info">
+        <h2>Real-Time Facial Expression Detector</h2>
+        <p>
+          The power of <strong>YOLOv8</strong> and your custom-trained
+          model to detect Facial Expression instantly using your
+          webcam.
+        </p>
+        <button id="toggleBtn">Start Detection</button>
+        <div id="video" src=""></div>
+      </section>
+
+      <section class="viewer">
+        <div class="screen">
+          <div class="glow-ring"></div>
+          <img id="webcam-feed" src="" alt="Webcam feed" style="width:100%; border-radius:20px;">
+        </div>
+      </section>
+
+      <!-- <section class="viewer">
+        <div class="screen">
+          <div class="glow-ring"></div>
+          <div class="placeholder">
+            <p>Webcam feed will appear here</p>
+          </div>
+        </div>
+      </section> -->
+    </main>
+
+    <footer>
+      <p>
+        
+      </p>
+    </footer>
+  </div>
+
+<script>
+const toggleBtn = document.getElementById('toggleBtn');
+const webcamFeed = document.getElementById('webcam-feed');
+
+toggleBtn.addEventListener('click', async () => {
+  const res = await fetch('/toggle-camera', { method: 'POST' });
+  const data = await res.json();
+
+  if (data.camera_on) {
+    // add cache-busting query to ensure a fresh connection each start
+    webcamFeed.src = "/video_feed?rand=" + Date.now();
+    webcamFeed.style.display = 'block';
+    toggleBtn.textContent = 'Stop Detection';
+  } else {
+    // clear the src so browser closes connection immediately
+    webcamFeed.src = "";
+    webcamFeed.style.display = 'none';
+    toggleBtn.textContent = 'Start Detection';
+  }
+});
+</script>
+</body>
+</html>
